@@ -8,6 +8,7 @@ go build .
 ```
 
 ## Usage:
+```
 Usage of sha1dir:
   -filter string
         the blacklist of the directory, support regexp
@@ -15,6 +16,7 @@ Usage of sha1dir:
         the output file name or path (default "sha1result")
   -root string
         the root directory which to be walked (default ".")
+```
 
 ### Example Usage:
 ```
