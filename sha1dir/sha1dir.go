@@ -79,7 +79,7 @@ func Run(rootpath string, filter []string, outputfile string) {
 	for _, fil := range filter {
 		blacklist = append(blacklist, fil)
 	}
-	runtime.GOMAXPROCS(4)
+	runtime.GOMAXPROCS(runtime.NumCPU())
 	f, _ := os.Create(outputfile)
 	defer f.Close()
 	go func() {
