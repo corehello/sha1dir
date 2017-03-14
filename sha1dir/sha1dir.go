@@ -81,11 +81,11 @@ func Run(rootpath string, filter []string, outputfile string) {
 	defer f.Close()
 	go func() {
 		for t := range output {
+      fmt.Println("Writing to the output file: "+ outputfile)
 			fmt.Fprintln(f, t)
 		}
 	}()
 	dirwalk(rootpath)
 	wg.Wait()
 	close(output)
-	fmt.Println("Sha1 info for path " + rootpath + " is stored in the file: " + outputfile)
 }
