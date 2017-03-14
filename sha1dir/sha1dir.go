@@ -25,7 +25,7 @@ func sha1file(path string, info os.FileInfo, err error) error {
 					fmt.Println(err)
 				}
 				sum := sha1.Sum(content)
-        abspath,_ := filepath.Abs(path)
+				abspath, _ := filepath.Abs(path)
 				o := fmt.Sprintf("%s, %x, %d", abspath, sum, info.Size())
 				output <- o
 				//fix the data lost for buffered channel
@@ -45,6 +45,9 @@ func dirwalk(path string) {
 }
 
 func match(s []string, e string) bool {
+	if len(s) == 0 {
+		return false
+	}
 	for _, a := range s {
 		if regexp.MustCompile(a).MatchString(e) {
 			return true
@@ -73,15 +76,15 @@ func Run(rootpath string, filter []string, outputfile string) {
 		fmt.Println("The given path: " + rootpath + " is not existed on disk!!")
 		return
 	}
-	for _,fil := range filter {
+	for _, fil := range filter {
 		blacklist = append(blacklist, fil)
 	}
 	runtime.GOMAXPROCS(4)
 	f, _ := os.Create(outputfile)
 	defer f.Close()
 	go func() {
+		fmt.Println("Writing to the output file: " + outputfile)
 		for t := range output {
-      fmt.Println("Writing to the output file: "+ outputfile)
 			fmt.Fprintln(f, t)
 		}
 	}()
