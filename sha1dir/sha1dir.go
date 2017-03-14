@@ -10,6 +10,7 @@ import (
 	"runtime"
 	"sync"
 	"time"
+	"errors"
 )
 
 var wg sync.WaitGroup
@@ -61,20 +62,16 @@ func PathExists(path string) (bool, error) {
 	if err == nil {
 		return true, nil
 	}
-	if os.IsNotExist(err) {
-		return false, nil
-	}
 	return false, err
 }
 
 var blacklist []string
 var output = make(chan string, 31)
 
-func Run(rootpath string, filter []string, outputfile string) {
+func Run(rootpath string, filter []string, outputfile string) error{
 	_, err := PathExists(rootpath)
 	if err != nil {
-		fmt.Println("The given path: " + rootpath + " is not existed on disk!!")
-		return
+		return errors.New("The given path: " + rootpath + " is not existed on disk!!")
 	}
 	for _, fil := range filter {
 		blacklist = append(blacklist, fil)
@@ -91,4 +88,5 @@ func Run(rootpath string, filter []string, outputfile string) {
 	dirwalk(rootpath)
 	wg.Wait()
 	close(output)
+	return nil
 }

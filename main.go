@@ -10,7 +10,7 @@ import (
 
 func main() {
 	rootpath := flag.String("root", ".", "the root directory which to be walked")
-	filter := flag.String("filter", "", "the blacklist of the directory")
+	filter := flag.String("filter", "", "the blacklist of the directory, support regexp")
 	output := flag.String("output", "sha1result", "the output file name or path")
 	if len(os.Args) == 1 {
 		fmt.Println("Not enough given arguments")
@@ -25,9 +25,17 @@ func main() {
 		flag.Parse()
 	}
 	if *filter != "" {
-		sha1dir.Run(*rootpath, strings.Split(*filter, ","), *output)
+		err := sha1dir.Run(*rootpath, strings.Split(*filter, ","), *output)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(-1)
+		}
 	} else {
-		sha1dir.Run(*rootpath, []string{}, *output)
+		err := sha1dir.Run(*rootpath, []string{}, *output)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(-1)
+		}
 	}
 	fmt.Println("Sha1 info for path " + *rootpath + " is stored in the file: " + *output)
 }
